@@ -1,0 +1,185 @@
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    /* background: linear-gradient(135deg, #e3f2fd, #ede7f6); */
+    color: #333;
+}
+
+/* Website Header */
+.website-header {
+    background: #673ab7;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo {
+    
+    font-size: 2rem;
+    font-family: 'Bagel Fat One', sans-serif;;
+    font-weight: 400;
+    margin: 0;
+}
+
+.nav {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-item {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.nav-item:hover {
+    text-decoration: underline;
+}
+
+/* Auth Main Layout */
+.auth-main {
+    display: flex;
+    flex-wrap: wrap;
+    height: calc(100vh - 70px); /* Account for header height */
+}
+
+.auth-left, .auth-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.auth-left {
+    background: #ffffff;
+}
+
+.auth-right {
+    /* background: #ede7f6; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-right img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Form Container */
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-header h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #673ab7;
+}
+
+.auth-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+}
+
+.auth-toggle input[type="radio"] {
+    margin-right: 5px;
+}
+
+.auth-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.auth-form input, .auth-form button {
+    width: 100%;
+    max-width: 350px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.auth-form select{
+    width: 100%;
+    max-width: 370px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.auth-form button {
+    background: #673ab7;
+    color: white;
+    cursor: pointer;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+#auth-title{
+    font-family: 'Bagel Fat One', sans-serif;
+    font-weight: 400;
+}
+
+.auth-form button:hover {
+    background: #5e35b1;
+}
+
+button#forgot {
+    background: #b7593a;
+    color: white;
+    cursor: pointer;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .auth-main {
+        flex-direction: column;
+    }
+
+    .auth-right img {
+        display: none;
+    }
+}

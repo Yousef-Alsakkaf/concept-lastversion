@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conceptive Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='Assets/favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300&display=swap"
+        rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bagel Fat One&display=swap" rel="stylesheet">
+        <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+    <!-- Website Navigation -->
+    <header class="website-header">
+        <div class="header-content">
+            <h1 class="logo">Conceptiv AI</h1>
+            <nav class="nav">
+                <!-- <a href="/create-checkout-session" class="nav-item" id="#regbutton">Register</a> -->
+                <button class="nav-item" id="regbutton">Register</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Section -->
+    <main>
+
+        <div id="email-modal" class="modal">
+            <div class="modal-content">
+                <h2>Trial usage ended.</h2>
+                <p>Get 5 more minutes by verifying your email ID</p>
+                <form id="email-form" class="email-form">
+                    <input type="email" id="extra-email" name="email" placeholder="Email" required>
+                    <input type="text" id="login-otp" name="login-otp" placeholder="Enter OTP" required>
+                    <button type="button" id="extra-get-otp">Get OTP</button>
+                    <button type="button" id="extra-submit">Register</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Premium Modal -->
+        <div class="modal" id="paymentModal" >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="paymentModalLabel">Complete Your Payment</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form id="payment-form">
+                    <div id="card-element"><!-- Stripe Element will be inserted here --></div>
+                    <div id="card-errors" role="alert" class="text-danger mt-2"></div>
+                    <button id="submit" class="btn btn-success mt-3">Submit Payment</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+        </div>
+        <!-- <div id="premium-modal" class="modal">
+            <div class="modal-content">
+                <h2>Free Usage Ended</h2>
+                <p>Your free usage has ended. Please upgrade to continue using our services.</p>
+                <button id="buy-premium-btn">Buy 30 mins now at Just $9.99</button>
+            </div>
+        </div> -->
+
+
+        <div class="main-container">
+        <!-- Chatbox Section -->
+        <section class="chatbox-section">
+            <div class="chat-container">
+                <header class="chat-header">
+                    <!-- Dynamic Title for Chat -->
+                    <h2 id="chat-title">Conceptiv AI</h2>
+                </header>
+                <div id="chat-window" class="chat-window">
+                    <div class="notification-bar">
+                        Free usage ends in <span id="countdown">10:00</span>. Upgrade to Premium for unlimited access.
+                    </div>
+                    <div id="messages" class="messages"></div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="user-input" placeholder="Type your message...">
+                    <button id="send-btn">Send</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="profile-section">
+            <div class="profile-container">
+                <img id="profile-picture" src="{{ url_for('static', filename='assets/avatar.png') }}" alt="Profile Picture" class="profile-picture">
+                <h3 id="profile-title">Your Title</h3>
+                <p id="profile-description">Short description goes here...</p>
+                <div id="customer-reviews" class="customer-reviews">
+                    <h4>Customer Reviews</h4>
+                    <ul id="reviews-list">
+                        <!-- Reviews will be dynamically added here -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+        </div>
+
+        <!-- <button id="logout-btn" class="logout-btn">Logout</button> -->
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        console.log("hi, Javascript works");
+           /*****************************
+             *    STRIPE GATEWAY BEGINS
+             */
+             const checkoutButton = document.getElementById("regbutton");
+
+                checkoutButton.addEventListener("click", function () {
+                    fetch("/create-checkout-session", {
+                        method: "POST",
+                    })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (sessionId) {
+                        return stripe.redirectToCheckout({ sessionId: sessionId.id });
+                    })
+                    .then(function (result) {
+                    if (result.error) {
+                        alert(result.error.message);
+                    }
+                    })
+                    .catch(function (error) {
+                        console.error("Error:", error);
+                    });
+                });
+
+            // const stripe = Stripe('pk_test_51QU5K7AG7fsY1gy7OrzwNY0Ix99zSTPS7RsWeLrrF0k1Z1wlVmKaStPcIqAIzmw6fib0I4Kc0IcAd4HL91v7jMKo00jhkEyCwA'); // Using the key passed from Flask
+            const stripe = Stripe("{{ stripepublickkey }}"); // Pass the key to the JavaScript file
+            const elements = stripe.elements();
+            // console.log('Stripe Public KEY: ' + stripe);  DEBUGGING PURPOSE
+
+            // Create a Stripe card element
+            const style = {
+                base: {
+                fontSize: '16px',
+                color: '#32325d',
+                },
+            };
+
+            // Disable Zip Code collection by configuring card options
+            const cardElement = elements.create('card', { hidePostalCode: true, style });
+
+            // Mount the card element into the DOM
+            cardElement.mount('#card-element');
+
+            // Handle form submission
+            const form = document.getElementById('payment-form');
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                // Disable the submit button
+                const submitButton = document.getElementById('submit');
+                submitButton.disabled = true;
+
+                // Create a Payment Method
+                const { error, paymentMethod } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+                });
+
+                if (error) {
+                // Display error message
+                document.getElementById('card-errors').textContent = error.message;
+                submitButton.disabled = false;
+                } else {
+                // Send payment method ID to your backend server for processing
+                const storedEmail = localStorage.getItem("usermail"); 
+                console.log(storedEmail);
+                fetch('/create-payment-intent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ payment_method: paymentMethod.id, cust_email : storedEmail }),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                    alert('Payment successful!');
+                    $('#paymentModal').modal('hide'); // Hide Payment Modal, After Payment
+                    hidePremiumModal();
+                    } else {
+                    alert('Payment failed: ' + data.message);
+                    showPremiumModal();
+                    }
+                    submitButton.disabled = false;
+                })
+                .catch((error) => {
+                    document.getElementById('card-errors').textContent = 'Something went wrong.';
+                    submitButton.disabled = false;
+                });
+                }
+            });
+            /**************************
+             *  STRIPE GATEWAY ENDS
+             */
+    </script>
+</body>
+
+</html>

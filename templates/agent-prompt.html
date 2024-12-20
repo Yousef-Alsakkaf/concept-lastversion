@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conceptive Chat</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/chat/chatBox.css') }}"
+    />
+
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='Assets/favicon.ico') }}"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bagel Fat One&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+
+  <body>
+    <header class="website-header">
+      <div class="header-content">
+        <h1 class="logo">Conceptiv AI</h1>
+      </div>
+    </header>
+
+    <main>
+      <div class="main-container">
+        <section class="chatbox-section">
+          <div class="chat-container">
+            <header class="chat-header">
+              <h2 id="chat-title">Conceptiv AI</h2>
+            </header>
+            <div id="chat-window" class="chat-window">
+              <div id="messages" class="messages"></div>
+            </div>
+            <div class="chat-input-container">
+              <input
+                type="text"
+                id="user-input"
+                placeholder="Type your message..."
+              />
+              <button id="send-btn">Send</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="profile-section">
+          <div class="profile-container">
+            <img
+              id="profile-picture"
+              src="{{ url_for('static', filename='Assets/' + agent_image_url) }}"
+              alt="{{ agent_name }}'s Profile Picture"
+              class="profile-picture"
+            />
+            <h3 id="profile-title">{{ agent_name }}</h3>
+            <p id="profile-description">
+              Welcome to the profile of {{ agent_name }}.
+            </p>
+            <p id="agent-role">Role: {{ agent_role }}</p>
+            
+            <p id="agent-id" data-agent-id="{{ agent_id }}"></p>
+            {% if my_agent_prompt %}
+                <p class="agent-prompt">Agent Prompt: {{ my_agent_prompt }}</p>
+            {% else %}
+                <p>No record found.</p>
+            {% endif %}
+
+          </div>
+        </section>
+      </div>
+    </main>
+    <script src="{{ url_for('static', filename='js/chat/chatBox.js') }}"></script>
+  </body>
+</html>

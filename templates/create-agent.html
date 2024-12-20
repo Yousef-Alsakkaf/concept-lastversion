@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Agent.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300&display=swap"
+        rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bagel Fat One&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="side-navbar-layout">
+        <!-- Side Navbar -->
+        <nav class="side-navbar">
+            <div class="logo-container">
+                <h1 class="logo">Conceptiv AI</h1>
+            </div>
+            <ul class="menu-items">
+                <!-- <li><a href="/dashboard" class="menu-item">Dashboard</a></li>
+                <li><a href="/company-detail" class="menu-item">Company Details</a></li> -->
+                <li><a href="/agent" class="menu-item active">Agent</a></li>
+                <li><a href="/portal" class="menu-item">Portal</a></li>
+                <!-- <li><a href="/product-detail" class="menu-item">Product Details</a></li>
+                <li><a href="/service-detail" class="menu-item">Service Details</a></li>
+                <li><a href="/terms" class="menu-item">Terms and Policy</a></li>
+                <li><a href="/knowledge" class="menu-item">Knowledge Base</a></li> -->
+            </ul>
+        </nav>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <h2>Select an Agent</h2>
+            <form id="agent-selection-form" class="form">
+                <div class="card-container">
+                    <!-- Agent Card 1 -->
+                    <label class="agent-card">
+                        <input type="radio" name="agent" value="Josephine">
+                        <div class="card-content">
+                            <img src="{{ url_for('static', filename='Assets/Josephine.png') }}" alt="Agent 1" class="agent-image">
+                            <h3 class="agent-name">Josephene</h3>
+                            <p class="agent-category">Healthcare Advisor</p>
+                        </div>
+                    </label>
+
+                    <!-- Agent Card 2 -->
+                    <label class="agent-card">
+                        <input type="radio" name="agent" value="Jasmine">
+                        <div class="card-content">
+                            <img src="{{ url_for('static', filename='Assets/Jasmine.png') }}" alt="Agent 2" class="agent-image">
+                            <h3 class="agent-name">Jasmine</h3>
+                            <p class="agent-category">Tech Support Specialist</p>
+                        </div>
+                    </label>
+
+                    <!-- Agent Card 3 -->
+                    <label class="agent-card">
+                        <input type="radio" name="agent" value="Tony">
+                        <div class="card-content">
+                            <img src="{{ url_for('static', filename='Assets/Tony.png') }}" alt="Agent 3" class="agent-image">
+                            <h3 class="agent-">Tony</h3>
+                            <p class="agent-category">Marketing and Business Expert</p>
+                        </div>
+                    </label>
+
+                    
+                <!-- Custom Prompt Adjustment -->
+                <!-- <div id="custom-prompt-container">
+                    <label for="custom-prompt">Custom Prompt Adjustment - Leave empty for Default</label>
+                    <textarea id="custom-prompt" rows="4" placeholder="Enter your custom prompt adjustment (Optional)"></textarea>
+                </div> -->
+
+                <button type="button" id="create-new-agent" class="save-button">Modify Prompt Constraints</button>
+
+                <div id="custom-fields-container">
+                    <!-- AI Customization Section -->
+                     <div id="promptarea">
+                    <h3>AI Customization</h3>
+                    <label for="name">Name</label>
+                    <div class="input-with-icon">
+                        <textarea id="name" placeholder="Enter the name"></textarea>
+                        <span class="info-icon" title="This is the name the agent uses to identify itself in messages and is also displayed as the recipient's name on the screen.">ℹ</span>
+                    </div>
+                
+                    <label for="persona">Persona</label>
+                    <div class="input-with-icon">
+                        <textarea id="persona" placeholder="Enter the persona"></textarea>
+                        <span class="info-icon" title="The persona defines the agent's role, job or function, representing how the agent presents itself to the user, such as a fortune teller or a life coach.">ℹ</span>
+                    </div>
+                
+                    <label for="purpose">Purpose</label>
+                    <div class="input-with-icon">
+                        <textarea id="purpose" placeholder="Enter the purpose"></textarea>
+                        <span class="info-icon" title="The purpose is the agent's primary objective in interacting with the user, such as selling readings or lessons, while adopting the assigned persona.">ℹ</span>
+                    </div>
+                
+                    <label for="attitude">Attitude</label>
+                    <div class="input-with-icon">
+                        <textarea id="attitude" placeholder="Enter the attitude"></textarea>
+                        <span class="info-icon" title="The agent's attitude, such as being empathetic or professional, when responding to user messages.">ℹ</span>
+                    </div>
+                
+                    <label for="uniquetraits">Unique Traits</label>
+                    <div class="input-with-icon">
+                        <textarea id="uniquetraits" placeholder="Enter unique traits"></textarea>
+                        <span class="info-icon" title="These specify the agent's unique traits, such as speaking like someone from the UK or using Gen Z slang.">ℹ</span>
+                    </div>
+                
+                    <label for="limitations">Limitations</label>
+                    <div class="input-with-icon">
+                        <textarea id="limitations" placeholder="Enter limitations"></textarea>
+                        <span class="info-icon" title="The agent's limitations during interactions, such as avoiding swear words or excluding specific details like competitors' pricing.">ℹ</span>
+                    </div>
+                </div>
+                
+
+                <button type="button" id="create-new-agent" class="save-button">Modify Prompt Constraints</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Agent.js') }}"></script>
+</body>
+
+</html>

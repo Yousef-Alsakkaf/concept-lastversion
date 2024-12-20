@@ -1,0 +1,209 @@
+/* Agent Cards */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.agent-card {
+    width: 150px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.agent-card input[type="radio"] {
+    display: none;
+}
+
+.agent-card:hover {
+    border-color: #673ab7;
+    box-shadow: 0 4px 8px rgba(103, 58, 183, 0.2);
+}
+
+.agent-card input[type="radio"]:checked + .card-content {
+    border-color: #673ab7;
+    box-shadow: 0 4px 8px rgba(103, 58, 183, 0.5);
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    vertical-align: top;
+}
+
+.agent-image {
+    width: 100%;
+    height: 80%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.agent-name {
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    color: #333;
+}
+
+.agent-category {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.agent-gender{
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 9px;
+    color: #5e35b1;
+}
+
+#custom-fields-container h3 {
+    font-size: 2rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    color: #673ab7;
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+
+/* Tooltip Styles */
+.tooltip {
+    position: fixed; /* Positioned relative to the viewport */
+    font-family: 'Poppins', sans-serif;
+    background: #333;
+    color: #fff;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    white-space: pre-wrap; /* Allows line breaks */
+    z-index: 1000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    pointer-events: none; /* Prevent tooltips from capturing mouse events */
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    max-width: 250px; /* Set a maximum width */
+    word-wrap: break-word; /* Break words if too long */
+}
+
+.info-icon {
+    position: relative;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: #673ab7;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: solid 1px #673ab7;
+    background-color: #f3f3f3;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+}
+
+.info-icon:hover {
+    background-color: #673ab7;
+    color: white;
+}
+
+/* Input Fields and Containers */
+#custom-fields-container label {
+    display: block;
+    margin-top: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    color: #673ab7;
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.input-with-icon textarea,
+.input-with-icon input {
+    width: 100%;
+    max-width: calc(100% - 30px); /* Account for icon space */
+    padding: 10px;
+    field-sizing: content;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.input-with-icon textarea:focus,
+.input-with-icon input:focus {
+    border-color: #673ab7;
+    outline: none;
+    box-shadow: 0 0 5px rgba(103, 58, 183, 0.5);
+}
+
+/* Textarea Styles */
+#custom-fields-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    resize: none;
+}
+
+#custom-fields-container input {
+    width: 100%;
+    padding: 10px;
+    height: 60px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    resize: none;
+}
+
+#custom-fields-container textarea:focus {
+    border-color: #673ab7;
+    outline: none;
+    box-shadow: 0 0 5px rgba(103, 58, 183, 0.5);
+}
+
+#custom-fields-container label[contenteditable="true"] {
+    outline: none;
+    cursor: text;
+}
+
+/* Save Button */
+.save-button {
+    background: #673ab7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    width: 100%;
+}
+
+.save-button:hover {
+    background: #5e35b1;
+}

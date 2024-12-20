@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conceptiv AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ProductDetails.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300&display=swap"
+        rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bagel Fat One&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="side-navbar-layout">
+        <!-- Side Navbar -->
+        <nav class="side-navbar">
+            <div class="logo-container">
+                <h1 class="logo">Conceptiv AI</h1>
+            </div>
+            <ul class="menu-items">
+                <li><a href="/dashboard" class="menu-item">Dashboard</a></li>
+                <li><a href="/company-detail" class="menu-item">Company Details</a></li>
+                <li><a href="/agent" class="menu-item">Agent</a></li>
+                <li><a href="/product-detail" class="menu-item active">Product Details</a></li>
+                <li><a href="/service-detail" class="menu-item">Service Details</a></li>
+                <li><a href="/terms" class="menu-item">Terms and Policy</a></li>
+                <li><a href="/knowledge" class="menu-item">Knowledge Base</a></li>
+        </nav>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <h2>Product Details</h2>
+            <!-- Product Table -->
+            <table id="product-table" class="product-table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Deals/Offers</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Placeholder rows -->
+                    <tr>
+                        <td>Product 1</td>
+                        <td>$100</td>
+                        <td>10% Off</td>
+                        <td>
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Product 2</td>
+                        <td>$200</td>
+                        <td>Buy 1 Get 1 Free</td>
+                        <td>
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Add/Update Product Form -->
+            <form id="product-form" class="form">
+                <h3 id="form-title">Add Product</h3>
+                <div class="form-group">
+                    <label for="product-name">Product Name</label>
+                    <input type="text" id="product-name" placeholder="Enter product name" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-price">Price</label>
+                    <input type="number" id="product-price" placeholder="Enter product price" required>
+                </div>
+                <div class="form-group">
+                    <label for="product-deals">Deals/Offers</label>
+                    <input type="text" id="product-deals" placeholder="Enter deals/offers">
+                </div>
+                <button type="submit" class="save-button">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- <script src="script.js"></script> -->
+</body>
+
+</html>

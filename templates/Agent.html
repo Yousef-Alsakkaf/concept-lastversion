@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agent</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/home.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/Agent/Agent.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/Agent/popup/newAgentPopUp.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/Agent/popup/viewAgentPopUp.css') }}"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="side-navbar-layout">
+      <nav class="side-navbar">
+        <div class="logo-container">
+          <h1 class="logo">Conceptiv AI</h1>
+        </div>
+        <ul class="menu-items">
+          <li><a href="/agent" class="menu-item active">Agent</a></li>
+          <li><a href="/portal" class="menu-item">Portal</a></li>
+          <li>
+            <a href="/stripe-settings" class="menu-item">Stripe Settings</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="content-area">
+        <h2>Select an Agent</h2>
+        <form id="agent-selection-form" class="form">
+          <div class="card-container">
+            {% for agent in agents %}
+            <label class="agent-card">
+              <input type="radio" name="agent" value="{{ agent.agent_name }}" />
+              <div class="card-content">
+                <img
+                src="{{ url_for('static', filename='Assets/avatar.png') }}"
+                alt="{{ agent.agent_name }}"
+                class="agent-image"
+                onclick="openEditPopup('{{ agent.agent_id }}', '{{ agent.agent_name }}', '{{ agent.gender }}', '{{ agent.agent_role }}', '{{ agent.prompt }}')"
+              />
+                <h3 class="agent-name">{{ agent.agent_name }}</h3>
+                <p class="agent-category">{{ agent.gender }}</p>
+                <p class="agent-category">{{ agent.agent_role }}</p>
+                <!-- New "Talk to [Agent Name]" Box -->
+                <div class="talk-to-box">
+                  <!-- Anchor tag with target="_blank" to open in a new window/tab -->
+                  <a
+                    href="{{ url_for('server_prompts_page', agentId=agent.agent_id) }}"
+                    class="talk-to-link"
+                    target="_blank"
+                  >
+                    Talk to {{ agent.agent_name }}
+                  </a>
+                </div>
+              </div>
+            </label>
+            {% endfor %}
+          </div>
+
+          <button type="submit" class="save-button">Try Now</button>
+        </form>
+      </div>
+    </div>
+
+    <button class="create-user-button">Create Agent</button>
+    <div id="edit-user-popup" class="popup-modal">
+      <div class="popup-content">
+        <span class="popup-close" onclick="closeEditPopup()">&times;</span>
+        <h2>Edit Agent</h2>
+        <form id="edit-user-form">
+          <input type="hidden" id="edit-user-id" name="agent_id" />
+          <label for="edit-user-name">Agent Name</label>
+          <input type="text" id="edit-user-name" name="agent_name" required />
+        
+          <label for="edit-user-gender">Gender</label>
+          <select id="edit-user-gender" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        
+          <label for="edit-user-role">Agent Role</label>
+          <input type="text" id="edit-user-role" name="agent_role" required />
+        
+          <label for="edit-user-prompt">Agent Prompt</label>
+          <textarea id="edit-user-prompt" name="agent_prompt" rows="4" required></textarea>
+        
+          <button type="button" id="save-edit-agent" class="save-button">Save</button>
+        </form>
+        
+      </div>
+    </div>
+    <div id="create-user-popup" class="popup-modal">
+      <div class="popup-content">
+        <!-- <span class="popup-close">&times;</span> -->
+        <h2>Create New Agent</h2>
+        <form id="create-user-form">
+          <label for="user-name">Agent Name</label>
+          <input type="text" id="user-name" name="agent_name" required />
+
+          <label for="user-gender">Gender</label>
+          <select id="user-gender" name="gender" required>
+            <option value="male">male</option>
+            <option value="female">female</option>
+          </select>
+
+          <label for="user-role">Agent Role</label>
+          <input type="text" id="user-role" name="agent_role" required />
+
+          <label for="user-prompt">Agent Prompt</label>
+          <textarea
+            id="user-prompt"
+            name="agent_prompt"
+            rows="4"
+            required
+          ></textarea>
+
+          <button type="submit" class="save-button">Save</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="agent-info-popup" class="popup-modal">
+      <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>Agent Information</h2>
+        <div id="agent-info">
+          <img id="agent-info-image" src="" alt="" class="agent-image" />
+          <h3 id="agent-info-name"></h3>
+          <p id="agent-info-gender"></p>
+          <p id="agent-info-role"></p>
+          {% if my_agent_prompt %}
+              <p class="agent-prompt">Agent Prompt: {{ my_agent_prompt }}</p>
+          {% else %}
+              <p>No record found.</p>
+          {% endif %}
+          
+          <button id="edit-agent" class="green-button">Edit</button>
+          <button id="delete-agent" class="red-button">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/Agent/home.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Agent/Agent.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Agent/AddUser.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Agent/Popup.js') }}"></script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+  const popupModal = document.getElementById("create-user-popup");
+  const closeButton = document.querySelector(".popup-close");
+
+  closeButton.addEventListener("click", function () {
+    popupModal.style.display = "none";
+  });
+
+  const saveEditButton = document.getElementById("save-edit-agent");
+  saveEditButton.addEventListener("click", function () {
+    const agentId = document.getElementById("edit-user-id").value; 
+    const agentName = document.getElementById("edit-user-name").value;
+    const agentGender = document.getElementById("edit-user-gender").value;
+    const agentRole = document.getElementById("edit-user-role").value;
+    const agentPrompt = document.getElementById("edit-user-prompt").value;
+
+    const data = {
+      agent_id: agentId,
+      agent_name: agentName,
+      gender: agentGender,
+      agent_role: agentRole,
+      agent_prompt: agentPrompt
+    };
+
+    fetch('/edit_user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        if (data.message === 'Agent updated successfully') {
+          closeEditPopup(); 
+          location.reload(); 
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while updating the agent.');
+      });
+  });
+});
+
+function openEditPopup(agentId, agentName, agentGender, agentRole, agentPrompt) {
+  const editPopup = document.getElementById("edit-user-popup");
+  editPopup.style.display = "flex";
+
+  document.getElementById("edit-user-name").value = agentName;
+  document.getElementById("edit-user-gender").value = agentGender;
+  document.getElementById("edit-user-role").value = agentRole;
+  document.getElementById("edit-user-prompt").value = agentPrompt;
+
+  document.getElementById("edit-user-id").value = agentId;
+}
+
+function closeEditPopup() {
+  const editPopup = document.getElementById("edit-user-popup");
+  editPopup.style.display = "none";
+}
+
+    </script>
+
+    <style>
+      .popup-modal {
+        display: none;
+        /* position: fixed; */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .popup-content {
+        background-color: #fff;
+        padding: 35px;
+        border-radius: 12px;
+        width: 400px;
+        max-width: 90%;
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/UserLogin.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Website Navigation -->
+    <header class="website-header">
+        <div class="header-content">
+            <h1 class="logo">Conceptiv AI</h1>
+        </div>
+    </header>
+
+    <!-- Main Section -->
+    <main class="auth-main">
+        <div class="auth-left">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h2 id="auth-title">Start your Journey!</h2>
+                    <div class="auth-toggle">
+                        <label>
+                            <input type="radio" name="auth-toggle" value="login" id="login-radio" checked> Login
+                        </label>
+                        <label>
+                            <input type="radio" name="auth-toggle" value="signup" id="signup-radio"> Signup
+                        </label>
+                    </div>
+                </div>
+                <div class="auth-form-container">
+                    <!-- Login Form -->
+                    <form id="login-form" class="auth-form">
+                        <input type="email" id="login-email" placeholder="Email" required>
+                        <input type="text" id="login-otp" placeholder="Enter OTP" required>
+                        <button type="button" id="loginButton">Login</button>
+                        <button type="button" id="get-otp">Get OTP</button>
+                    </form>
+                    <!-- Signup Form -->
+                    <form id="signup-form" class="auth-form hidden">
+                        <input type="text" id="signup-first-name" placeholder="First Name" required>
+                        <input type="text" id="signup-last-name" placeholder="Last Name" required>
+                        <input type="number" id="signup-age" placeholder="Age" required>
+                        <select id="signup-gender" required>
+                            <option value="" disabled selected>Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="email" id="signup-email" placeholder="Email" required>
+                        <input type="text" id="signup-phone" placeholder="Phone Number" required>
+                        <input type="text" id="signup-otp" placeholder="Enter OTP" required>
+                        <button type="button" id="get-signup-otp">Get OTP</button>
+                        <button type="submit">Signup</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="auth-right">
+            <img src="{{ url_for('static', filename='Assets/login-illustration.png') }}" alt="User Login Illustration">
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/UserLogin.js') }}"></script>
+</body>
+
+</html>

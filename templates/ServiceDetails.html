@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conceptiv AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300&display=swap"
+        rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bagel Fat One&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="side-navbar-layout">
+        <!-- Side Navbar -->
+        <nav class="side-navbar">
+            <div class="logo-container">
+                <h1 class="logo">Conceptiv AI</h1>
+            </div>
+            <ul class="menu-items">
+                <li><a href="/dashboard" class="menu-item">Dashboard</a></li>
+                <li><a href="/company-detail" class="menu-item">Company Details</a></li>
+                <li><a href="/agent" class="menu-item">Agent</a></li>
+                <li><a href="/product-detail" class="menu-item">Product Details</a></li>
+                <li><a href="/service-detail" class="menu-item active">Service Details</a></li>
+                <li><a href="/terms" class="menu-item">Terms and Policy</a></li>
+                <li><a href="/knowledge" class="menu-item">Knowledge Base</a></li>
+        </nav>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <h2>Welcome to Conceptiv AI AI</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum.
+                Cras venenatis euismod malesuada. Nullam vehicula, nulla ut viverra cursus, purus quam tincidunt tortor,
+                non fringilla est eros id ligula.</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+</body>
+
+</html>

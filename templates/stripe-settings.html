@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Agent.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@300&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bagel Fat One&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="side-navbar-layout">
+        <nav class="side-navbar">
+            <div class="logo-container">
+                <h1 class="logo">Conceptiv AI</h1>
+            </div>
+            <ul class="menu-items">
+                <li><a href="/agent" class="menu-item">Agent</a></li>
+                <li><a href="/portal" class="menu-item">Portal</a></li>
+                <li><a href="/stripe-settings" class="menu-item active">Stripe Settings</a></li>
+            </ul>
+        </nav>
+
+        <div class="content-area">
+            <h2>Stripe API Key Settings</h2>
+
+            {% for stripe_key in stripe_keys %}
+                <form id="stripe-settings-form" class="form">
+                    <div class="card-container">
+                        <label for="private-key">Secret Key</label>
+                        <input type="text" class="form-control" name="private-key" id="private-key" value="{{ stripe_key.stripe_secret_key }}">
+
+                        <label for="public-key">Public Key</label>
+                        <input type="text" class="form-control" name="public-key" id="public-key" value="{{ stripe_key.stripe_public_key }}">
+
+                        <!-- Hidden input field to hold the stripe_id -->
+                        <input type="hidden" id="stripe-id" value="{{ stripe_key.stripe_id }}">
+                    </div>
+                    <div class="container">
+                        <button type="submit" class="save-button">Save Keys</button>
+                    </div>
+                </form>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Agent.js') }}"></script>
+    <script>
+        document.querySelector('#stripe-settings-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Retrieve the stripe_id from the hidden input field
+            const stripe_id = document.getElementById('stripe-id').value;
+            const stripe_public_key = document.getElementById('public-key').value;
+            const stripe_secret_key = document.getElementById('private-key').value;
+
+            const data = {
+                stripe_id: stripe_id,
+                stripe_public_key: stripe_public_key,
+                stripe_secret_key: stripe_secret_key
+            };
+
+            fetch('/edit-stripe-settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+
+</html>
