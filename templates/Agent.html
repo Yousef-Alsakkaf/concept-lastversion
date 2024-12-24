@@ -50,7 +50,7 @@
         <h2>Select an Agent</h2>
         <form id="agent-selection-form" class="form">
           <div class="card-container">
-            {% for agent in agents %}
+            {% for agent, prompt in agents_and_prompts %}
             <label class="agent-card">
               <input type="radio" name="agent" value="{{ agent.agent_name }}" />
               <div class="card-content">
@@ -58,7 +58,7 @@
                 src="{{ url_for('static', filename='Assets/avatar.png') }}"
                 alt="{{ agent.agent_name }}"
                 class="agent-image"
-                onclick="openEditPopup('{{ agent.agent_id }}', '{{ agent.agent_name }}', '{{ agent.gender }}', '{{ agent.agent_role }}', '{{ agent.prompt }}')"
+                onclick="openEditPopup('{{ agent.agent_id }}', '{{ agent.agent_name }}', '{{ agent.gender }}', '{{ agent.agent_role }}', '{{ prompt.prompt }}')"
               />
                 <h3 class="agent-name">{{ agent.agent_name }}</h3>
                 <p class="agent-category">{{ agent.gender }}</p>
@@ -79,7 +79,7 @@
             {% endfor %}
           </div>
 
-          <button type="submit" class="save-button">Try Now</button>
+          <!-- <button type="submit" class="save-button">Try Now</button> -->
         </form>
       </div>
     </div>
@@ -104,7 +104,7 @@
           <input type="text" id="edit-user-role" name="agent_role" required />
         
           <label for="edit-user-prompt">Agent Prompt</label>
-          <textarea id="edit-user-prompt" name="agent_prompt" rows="4" required></textarea>
+          <textarea id="edit-user-prompt" name="agent_prompt" rows="6" required></textarea>
         
           <button type="button" id="save-edit-agent" class="save-button">Save</button>
         </form>

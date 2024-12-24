@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert(`Agent added successfully! Agent ID: ${data.agent_id}`);
                 createUserForm.reset();
                 document.getElementById("create-user-popup").style.display = "none";
+                location.reload(true)
             } else {
                 const error = await response.json();
                 alert(`Error: ${error.error}`);

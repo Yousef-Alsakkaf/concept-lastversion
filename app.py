@@ -1,9 +1,10 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory, url_for, redirect, g
+from flask import Flask, request, jsonify, render_template, send_from_directory, url_for, redirect, g, session
 from flask_cors import CORS
 from stripe import stripe, error
 # import stripe
 import openai
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import aliased
 from werkzeug.utils import secure_filename
 from celery import Celery
 from flask_apscheduler import APScheduler
@@ -25,6 +26,7 @@ openai.api_key = os.getenv('openaikey')
 # stripe.api_key = os.getenv('stripeprivatekey')
 # stripepublickkey = os.getenv('stripepublickey')
 zeptokey = os.getenv('zeptomailkey')
+
 # openai.api_key = os.environ.get('openaikey')
 # stripe.api_key = os.environ.get('stripeprivatekey')
 # stripepublickkey = os.environ.get('stripepublickey')
@@ -36,6 +38,8 @@ zeptokey = os.getenv('zeptomailkey')
 # Flask app initialization
 app = Flask(__name__)
 CORS(app)
+
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'fallback_secret_key')
 
 # from models import ChatSession
 # from models import Login ChatInteraction, TblAgent, Transaction, tbl_prompt # Import Models
@@ -199,9 +203,32 @@ def server_prompts_page():
 
 @app.route('/agent', methods=['GET'])
 def serve_agent_page():
-    agents = TblAgent.query.all()
-    print('Agents are ', agents)
-    return render_template('Agent.html', agents=agents)
+    user_id = session.get('user_id')
+
+    # Create an alias for TblPrompt
+    prompt_alias = aliased(tbl_prompt)
+
+    # Subquery to get the latest TblPrompt per user_id
+    latest_prompt_subquery = db.session.query(
+        tbl_prompt.user_id, 
+        tbl_prompt.prompt_id
+    ).filter(
+        tbl_prompt.user_id == TblAgent.user_id  # Ensure we're filtering by the same user_id
+    ).order_by(
+        desc(tbl_prompt.prompt_id)  # Order by id (desc) to get the latest one
+    ).limit(1).subquery()  # Wrap it as a subquery   # Get only the latest prompt
+
+    # Query agents and join with the latest prompt (from the subquery)
+    agents_and_prompts = db.session.query(TblAgent, tbl_prompt) \
+        .join(latest_prompt_subquery, TblAgent.user_id == latest_prompt_subquery.c.user_id) \
+        .join(tbl_prompt, tbl_prompt.prompt_id == latest_prompt_subquery.c.prompt_id) \
+        .filter(TblAgent.user_id == user_id) \
+        .all()
+
+    print('Agents and prompts:', agents_and_prompts)
+
+    return render_template('Agent.html', agents_and_prompts=agents_and_prompts)
+
 
 @app.route('/stripe-settings', methods=['GET'])
 def serve_stripe_settings():
@@ -212,7 +239,7 @@ def serve_stripe_settings():
 @app.route('/edit-stripe-settings', methods=['POST'])
 def edit_stripe_settings():
     data = request.get_json() 
-    
+    f
     stripe_id = data.get('stripe_id')
     stripe_public_key = data.get('stripe_public_key')
     stripe_secret_key = data.get('stripe_secret_key')
@@ -358,6 +385,10 @@ def loginuser():
     password = data.get('password')
 
     user = Login.query.filter_by(email=email, password=password).first()
+
+    if user:
+        session['user_id'] = user.user_id
+
     if user:
         return jsonify({
             "status": "success",
@@ -436,8 +467,11 @@ def add_user():
             image_url=data['image_url'],
             agent_prompt=data['agent_prompt'],
             agent_role=data['agent_role'],
+            user_id=data.get('userId'), 
             updated_at=datetime.now(timezone.utc)
         )
+
+        print(new_agent)            # DEBUGGING PURPOSE
 
         db.session.add(new_agent)
         db.session.commit()
@@ -451,6 +485,8 @@ def add_user():
             created_at=datetime.now(timezone.utc),
             updated_at=datetime.now(timezone.utc)
         )
+
+        print(new_prompt)            # DEBUGGING PURPOSE
 
         db.session.add(new_prompt)
         db.session.commit()
@@ -482,7 +518,24 @@ def edit_user():
 
     agent = TblAgent.query.filter_by(agent_id=agent_id).first()
 
+    # TABLE PROMPT
+    if agent:
+        new_prompt = tbl_prompt(
+            role=agent_role,
+            prompt=agent_prompt,
+            user_id=session.get('user_id'),
+            company_id=1,
+            agent_id = agent_id
+        )
+        db.session.add(new_prompt)
+    
+    try:
+        db.session.commit()
+        print('Agent Prompt Created')
+    except Exception as e:
+        print(e)
 
+    # TABLE AGENT
     if not agent:
         return jsonify({'message': 'Agent not found'}), 404
 
@@ -500,9 +553,11 @@ def edit_user():
     try:
         db.session.commit()
         return jsonify({'message': 'Agent updated successfully'}), 200
+        print('Agent updated')
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
+        
 
 
 @app.route('/fetch_messages', methods=['GET'])
@@ -848,6 +903,7 @@ class TblAgent(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))  
     agent_prompt = db.Column(db.Text, nullable=False) 
     agent_role = db.Column(db.String(255), nullable=False) 
+    user_id = db.Column(db.BigInteger, nullable=False)
 
 class tbl_stripe(db.Model):
     __tablename__ = 'tbl_stripe'
