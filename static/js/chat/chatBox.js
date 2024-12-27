@@ -70,6 +70,7 @@ function sendChatRequest(userMessage) {
       agent_id: agentIdNumber
     }),
   })
+  
     .then(response => response.json())
     .then(data => {
       if (data.reply) {

@@ -120,12 +120,12 @@ document.addEventListener("DOMContentLoaded", () => {
   //   alert("You can now edit labels and start creating a new agent!");
   // });
 
-  function resetCustomization() {
-    const promptArea = document.getElementById("promptarea");
-    const inputs = promptArea.querySelectorAll("textarea, input");
-    const labels = promptArea.querySelectorAll("label");
-    const infoIcons = promptArea.querySelectorAll(".info-icon");
-
+  // function resetCustomization() {
+  //   const promptArea = document.getElementById("promptarea");
+  //   const inputs = promptArea.querySelectorAll("textarea, input");
+  //   const labels = promptArea.querySelectorAll("label");
+  //   const infoIcons = promptArea.querySelectorAll(".info-icon");
+/*
     // Reset placeholders
     inputs.forEach(input => {
       const label = promptArea.querySelector(`label[for='${input.id}']`);
@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (tooltip) tooltip.remove();
     });
   });
-
+*/
 
   // const updateChatboxTitle = () => {
   //     const botName = localStorage.getItem("customPromptName") || "Bot";
@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Save the bot name for use in the chat interface
       localStorage.setItem("customPromptName", data.name || "Bot");
       // updateChatboxTitle();
-      resetCustomization();
+      // resetCustomization();
 
       fields.forEach((field) => {
         const input = document.getElementById(field);
@@ -311,13 +311,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Create a custom prompt string for submission
       const customPrompt = fields
-        .slice(0, 6) // Take only the first 6 fields
-        .map((field) => {
-          const value = document.getElementById(field).value;
-          return value ? `Your ${field} is ${value}.` : null;
-        })
-        .filter(Boolean) // Remove null or undefined values
-        .join(" ");
+            .slice(0, 6) // Take only the first 6 fields
+            .map((field) => {
+              const value = document.getElementById(field).value;
+              return value ? `Your ${field} is ${value}.` : null;  // Return a string or null
+            })
+            .filter(Boolean) // Remove null or undefined values
+            .join(" "); // Join the non-null values with a space
+
 
       if (!customPrompt) {
         alert("Please fill at least one field to create a custom prompt.");

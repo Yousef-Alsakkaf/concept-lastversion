@@ -693,94 +693,110 @@ def getAdminContext():
         return jsonify({"error": "An error occurred while retrieving the prompt.", "details": str(e)}), 500
 
 
+# Retrieve the system prompt from tbl_agent
+def get_system_prompt(agent_id):
+    prompt = db.session.query(TblAgent).filter_by(agent_id=agent_id).first().agent_prompt
+    return prompt
+
+# Retrieve conversation history from tbl_chatinteraction
+def get_conversation_history(user_id, agent_id):
+    history = db.session.query(ChatInteraction).filter_by(user_id=user_id, agent_id=agent_id).all()
+    return [{'role': 'user', 'content': record.user_question} for record in history] + \
+           [{'role': 'assistant', 'content': record.ai_response} for record in history]
+
+# Save new user and assistant interaction to the database
+def save_conversation(user_id, agent_id, user_question, ai_response):
+    new_interaction = ChatInteraction(
+        user_id=user_id,
+        agent_id=agent_id,
+        user_question=user_question,
+        ai_response=ai_response
+    )
+    db.session.add(new_interaction)
+    db.session.commit()
+
+# Function to interact with OpenAI API
+def interact_with_openai(user_id, agent_id, user_message):
+    system_prompt = get_system_prompt(agent_id)
+    conversation_history = get_conversation_history(user_id, agent_id)
+
+    # Prepare the request to OpenAI API
+    messages = [
+        {"role": "system", "content": system_prompt}
+    ] + conversation_history + [{"role": "user", "content": user_message}]
+    
 @app.route('/chat', methods=['POST'])
 def chat_endpoint():
     try:
-
         data = request.get_json()
         # print("Received data from Script JS: ", data)       # DEBUGGING PURPOSE
-
         # need to get the context_id and company_id 
         user_message = data.get('message', '').strip()
         user_id = data.get('user_id')
         company_id = data.get('company_id',None)  # Include company_id if available
         context = data.get('context', None)  # Optional field for additional context
         agent_id=data.get('agent_id', None)
-
-        print("User ID = ", user_id)            # DEBUGGING PURPOSE
-        print("Agent ID = ", agent_id)          # DEBUGGING PURPOSE
-
+        # print("User ID = ", user_id)            # DEBUGGING PURPOSE
+        # print("Agent ID = ", agent_id)          # DEBUGGING PURPOSE
         if not user_message or not user_id:
             print("Missing message or user_id")
             return jsonify({"error": "Message and User ID are required"}), 400
             
             
          # Retrieve or create session
-        session = (
+        agent_prompt = (
                     db.session.query(tbl_prompt)
                     .filter((tbl_prompt.user_id == user_id) & (tbl_prompt.agent_id == agent_id))
                     .order_by(desc(tbl_prompt.created_at))
                     .first()
                   )
         
-        if session:
+        if agent_prompt:
             # Access specific fields
-            print("User ID:", session.user_id)                # DEBUGGING PURPOSE
-            print("Agent ID:", session.agent_id)              # DEBUGGING PURPOSE
-            print("Created At:", session.created_at)          # DEBUGGING PURPOSE
-            print("Prompt Is:", session.prompt)   # DEBUGGING PURPOSE
+            print("User ID:", agent_prompt.user_id)                # DEBUGGING PURPOSE
+            print("Agent ID:", agent_prompt.agent_id)              # DEBUGGING PURPOSE
+            print("Created At:", agent_prompt.created_at)          # DEBUGGING PURPOSE
+            print("Prompt Is:", agent_prompt.prompt)   # DEBUGGING PURPOSE
         else:   
             print("No record found.")                               # DEBUGGING PURPOSE
 
-        my_agent_prompt = session.prompt if session else None  
-                              
-        if not session:
-            print("Session not initialized")
-            return jsonify({"error": "Session not initialized. Please set up a custom prompt first."}), 400
+        system_prompt = get_system_prompt(agent_id)
 
-        # Prepare history for OpenAI API
-        constraints=" Respond in a polite way."
-        constrained_prompt=[{"role": "user", "content": constraints}]
+        conversation_history = get_conversation_history(user_id, agent_id)
 
-        # history = session.history + [{"role": "user", "content": user_message}]
-        
-        session_history = [
-            {"role": "system", "content":session.prompt},
-            {"role": "user", "content":user_message}
-        ] + constrained_prompt #+ history
-        print("Session history:", session_history)
-
+        # Prepare the request to OpenAI API
+        messages = [
+            {"role": "system", "content": system_prompt}
+        ] + conversation_history + [{"role": "user", "content": user_message}]
+    
+        print(messages)
         # Correct usage of openai.chat.completions.create
         response =  openai.chat.completions.create(
             model="gpt-4o-mini",  # Use the desired model
-            messages=session_history
+            messages=messages
         )
         ai_response = response.choices[0].message.content.strip()
         # print(type(ai_response),"<==type of ai_response")                    # DEBUGGING PURPOSE
         # print("AI Response:", ai_response)                                   # DEBUGGING PURPOSE
-
         # Update session history
         # history.append({"role": "assistant", "content": ai_response})
         # session.history = history
         session.updated_at = datetime.now(timezone.utc)
         db.session.commit()
-
         new_interaction = ChatInteraction(
-            company_id=company_id,
+            company_id=1,
             user_question=user_message,
             ai_response=ai_response,
             context=context,
-            user_id=user_id
+            user_id=user_id,
+            agent_id=agent_id
         )
         db.session.add(new_interaction)
         db.session.commit()
-
         return jsonify({"reply": ai_response }), 200
-
     except Exception as e:
         print("Error in /chat:", str(e))
         return jsonify({"error": str(e)}), 500
-
 #=================================================
 
 # Route to Create Payment Intent and Store Transaction
@@ -861,6 +877,7 @@ class ChatInteraction(db.Model): #===================
     context = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
     user_id = db.Column(db.BigInteger, nullable=False)
+    agent_id = db.Column(db.BigInteger, nullable=False)
 
 class tbl_prompt(db.Model): #================
     __tablename__ = 'tbl_prompt'
