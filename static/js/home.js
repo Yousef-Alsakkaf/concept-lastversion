@@ -4,10 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const sideNavbar = document.getElementById("side-navbar");
 
     // Debugging: Check if elements are correctly accessed
-    console.log({ hamburgerBtn, sideNavbar });
+    // console.log({ hamburgerBtn, sideNavbar });
 
     if (!hamburgerBtn || !sideNavbar) {
-        console.error("One or more required elements (hamburger-btn, side-navbar) are missing from the DOM.");
+        console.log("One or more required elements (hamburger-btn, side-navbar) are missing from the DOM.");
         return;
     }
 

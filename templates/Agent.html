@@ -58,7 +58,7 @@
                 src="{{ url_for('static', filename='Assets/avatar.png') }}"
                 alt="{{ agent.agent_name }}"
                 class="agent-image"
-                onclick="openEditPopup('{{ agent.agent_id }}', '{{ agent.agent_name }}', '{{ agent.gender }}', '{{ agent.agent_role }}', '{{ prompt.prompt }}')"
+                onclick="openEditPopup('{{ agent.agent_id }}', '{{ agent.agent_name }}', '{{ agent.gender }}', '{{ agent.agent_role }} {{prompt.prompt}}')"
               />
                 <h3 class="agent-name">{{ agent.agent_name }}</h3>
                 <p class="agent-category">{{ agent.gender }}</p>
@@ -162,7 +162,7 @@
       </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/Agent/home.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
     <script src="{{ url_for('static', filename='js/Agent/Agent.js') }}"></script>
     <script src="{{ url_for('static', filename='js/Agent/AddUser.js') }}"></script>
     <script src="{{ url_for('static', filename='js/Agent/Popup.js') }}"></script>
@@ -214,14 +214,14 @@
   });
 });
 
-function openEditPopup(agentId, agentName, agentGender, agentRole, agentPrompt) {
+function openEditPopup(agentId, agentName, agentGender, agentRole) {
   const editPopup = document.getElementById("edit-user-popup");
   editPopup.style.display = "flex";
 
   document.getElementById("edit-user-name").value = agentName;
   document.getElementById("edit-user-gender").value = agentGender;
   document.getElementById("edit-user-role").value = agentRole;
-  document.getElementById("edit-user-prompt").value = agentPrompt;
+  // document.getElementById("edit-user-prompt").value = agentPrompt;
 
   document.getElementById("edit-user-id").value = agentId;
 }
